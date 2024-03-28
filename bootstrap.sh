@@ -15,7 +15,7 @@ kubectl cluster-info --context kind-kind
 # Deploy ArgoCD to cluster
 echo "Deploying ArgoCD to cluster"
 helm repo add argo-cd https://argoproj.github.io/argo-helm || :
-helm install argo-cd argo-cd/argo-cd -f argocd-values.yaml --namespace argocd --create-namespace || :
+helm upgrade --install argo-cd argo-cd/argo-cd -f argocd-values.yaml --namespace argocd --create-namespace || :
 
 # Get login information
 echo "Getting ArgoCD login password"
@@ -28,7 +28,7 @@ echo "Log in at http://localhost:8080"
 
 # Deploy VM Operator
 helm repo add vm https://victoriametrics.github.io/helm-charts/ || :
-helm install vm-operator vm/victoria-metrics-operator --namespace monitoring --create-namespace || :
+helm upgrade --install vm-operator vm/victoria-metrics-operator --namespace monitoring --create-namespace || :
 
 # Create example ArgoApp and ArgoAppProject
 echo "Creating ArgoApps and ArgoAppProjects"

@@ -11,11 +11,12 @@ spec:
   source:
     repoURL: https://github.com/arcud/argocd.git
     targetRevision: main
+    path: "."
+    plugin:
+      name: microhard-app-cmp-v666.69.420
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
     automated:
       selfHeal: true
       prune: true
-  plugin:
-    name: microhard-app-cmp

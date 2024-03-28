@@ -11,17 +11,12 @@ spec:
   source:
     repoURL: https://github.com/arcud/argocd.git
     targetRevision: main
+    path: "."
+    plugin:
+      name: microhard-alerts-and-dashboards-cmp-v1.0.0
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
     automated:
       selfHeal: true
       prune: true
-  plugin:
-    name: microhard-alerts-and-dashboards-cmp
-    parameters:
-      dynamic:
-        # The command is run in an Application's source directory.
-        # Standard output must be JSON matching the schema of the
-        # static parameter announcements list.
-        command: [echo, '[{"name": "managed-by", "string": "microhard-alerts-and-dashboards-cmp"}]']

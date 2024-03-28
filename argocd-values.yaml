@@ -46,16 +46,17 @@ configs:
               # This field communicates the parameter's default value to the UI. Setting this field is optional.
               string: microhard-app-cmp
       microhard-alerts-and-dashboards-cmp:
+        version: v1.0.0
         generate:
           command: [ "sh", "-c" ]
           args:
-            - sed -i "s/Windows/Doors/g" microhard-manifests/dashboards/vaules*.yaml
+            - sed -i "s/Windows/Doors/g" microhard-manifests/dashboards/values.integration.yaml
             - |
               helm template hello \
                 https://cloudecho.github.io/charts/ \
                 --version=9.3.2 \
-                -f microhard-manifests/dashboards/vaules.yaml \
-                -f microhard-manifests/dashboards/vaules.integration.yaml
+                -f microhard-manifests/dashboards/values.yaml \
+                -f microhard-manifests/dashboards/values.integration.yaml
 
 ## Repo Server
 repoServer:
@@ -77,9 +78,8 @@ repoServer:
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
         # Remove this volumeMount if you've chosen to bake the config file into the sidecar image.
-        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
-          subPath: plugin.yaml
-          name: argocd-cmp-cm
+        - mountPath: /home/argocd/cmp-server/config/
+          name: microhard-app-cmp-configmap-volume
         # Starting with v2.4, do NOT mount the same tmp volume as the repo-server container. The filesystem separation helps
         # mitigate path traversal attacks.
         - mountPath: /tmp
@@ -98,9 +98,8 @@ repoServer:
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
         # Remove this volumeMount if you've chosen to bake the config file into the sidecar image.
-        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
-          subPath: plugin.yaml
-          name: argocd-cmp-cm
+        - mountPath: /home/argocd/cmp-server/config/
+          name: microhard-alerts-and-dashboards-cmp-config-volume
         # Starting with v2.4, do NOT mount the same tmp volume as the repo-server container. The filesystem separation helps
         # mitigate path traversal attacks.
         - mountPath: /tmp
@@ -108,8 +107,17 @@ repoServer:
 
   # -- Additional volumes to the repo server pod
   volumes:
-   - name: argocd-cmp-cm
+   - name: microhard-app-cmp-configmap-volume
      configMap:
        name: argocd-cmp-cm
+       items:
+        - key: microhard-app-cmp.yaml
+          path: plugin.yaml
+   - name: microhard-alerts-and-dashboards-cmp-config-volume
+     configMap:
+       name: argocd-cmp-cm
+       items:
+        - key: microhard-alerts-and-dashboards-cmp.yaml
+          path: plugin.yaml
    - name: cmp-tmp
      emptyDir: {}
