@@ -51,10 +51,11 @@ configs:
           command: [ "sh", "-c" ]
           args:
             - sed -i "s/Windows/Doors/g" microhard-manifests/dashboards/values.integration.yaml
+            - helm repo add cloudecho https://cloudecho.github.io/charts/ 2>&1 > /dev/null
             - |
               helm template hello \
-                https://cloudecho.github.io/charts/ \
-                --version=9.3.2 \
+                cloudecho/hello \
+                --version=0.1.2 \
                 -f microhard-manifests/dashboards/values.yaml \
                 -f microhard-manifests/dashboards/values.integration.yaml
 
