@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: microhard-app
+  namespace: argocd
+spec:
+  destination:
+    namespace: microhard
+    server: https://kubernetes.default.svc
+  project: microhard-project
+  source:
+    repoURL: https://github.com/arcud/argocd.git
+    targetRevision: main
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
+  plugin:
+    name: microhard-app-cmp

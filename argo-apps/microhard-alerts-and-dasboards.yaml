@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: microhard-alerts-and-dashboards
+  namespace: argocd
+spec:
+  destination:
+    namespace: microhard
+    server: https://kubernetes.default.svc
+  project: microhard-project
+  source:
+    repoURL: https://github.com/arcud/argocd.git
+    targetRevision: main
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
+  plugin:
+    name: microhard-alerts-and-dashboards-cmp
+    parameters:
+      dynamic:
+        # The command is run in an Application's source directory.
+        # Standard output must be JSON matching the schema of the
+        # static parameter announcements list.
+        command: [echo, '[{"name": "managed-by", "string": "microhard-alerts-and-dashboards-cmp"}]']
