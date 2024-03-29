@@ -21,6 +21,8 @@ helm upgrade --install argo-cd argo-cd/argo-cd -f argocd-values.yaml --namespace
 echo "Getting ArgoCD login password"
 PASSWORD=$(kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 -d) || :
 echo "🔑 ArgoCD login information: Username: admin, password: $PASSWORD"
+echo "Sleep for a few seconds till Argo comes up"
+sleep 30
 
 echo "Starting port-forward in the background so you can log in"
 kubectl port-forward svc/argo-cd-argocd-server -n argocd 8080:443 2>&1 >/dev/null &

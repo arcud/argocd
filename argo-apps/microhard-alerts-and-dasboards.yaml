@@ -13,7 +13,7 @@ spec:
     targetRevision: main
     path: "."
     plugin:
-      name: microhard-alerts-and-dashboards-cmp-v1.0.0
+      name: microhard-alerts-and-dashboards-cmp-v100.0.9000
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

@@ -22,7 +22,7 @@ configs:
           # This is a good place to, for example, download chart dependencies.
           command: [sh]
           args: [-c, 'echo "Initializing the microhard app CMP 🔌..."']
-        # The 'generate' command runs in the Application source directory each time manifests are generated.
+        # The 'generate' command runs in the Application source directory (aka repo's root directory) each time manifests are generated.
         # Standard output (stdout) must be ONLY valid Kubernetes Objects in either YAML or JSON.
         # A non-zero exit code will fail manifest generation.
         # To write log messages from the command, write them to stderr, it will always be displayed.
@@ -46,17 +46,19 @@ configs:
               # This field communicates the parameter's default value to the UI. Setting this field is optional.
               string: microhard-app-cmp
       microhard-alerts-and-dashboards-cmp:
-        version: v1.0.0
+        version: v100.0.9000
         generate:
           command: [ "sh", "-c" ]
           args:
-            - sed -i "s/Windows/Doors/g" microhard-manifests/dashboards/values.integration.yaml
-            - helm repo add cloudecho https://cloudecho.github.io/charts/ 2>&1 > /dev/null
             - |
-              helm template hello \
-                cloudecho/hello \
-                --version=0.1.2 \
-                -f microhard-manifests/dashboards/values.yaml \
+              export XDG_CACHE_HOME=/tmp/.cache;
+              export HELM_CONFIG_HOME="/tmp/.config";
+              export HELM_DATA_HOME="/tmp/.data";
+              sed -i "s/Windows/Doors/g" microhard-manifests/dashboards/values.integration.yaml;
+              helm repo add cloudecho https://cloudecho.github.io/charts/ 2>&1 > /dev/null;
+              helm repo update 2>&1 > /dev/null;
+              helm template hello cloudecho/hello \
+                --version=0.1.2 -f microhard-manifests/dashboards/values.yaml \
                 -f microhard-manifests/dashboards/values.integration.yaml
 
 ## Repo Server
